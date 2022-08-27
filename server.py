@@ -4,6 +4,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app=Flask(__name__)
 
@@ -19,9 +20,10 @@ def _set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 db=SQLAlchemy(app)
+migrate = Migrate(app, db)
 now=datetime.now()
 
-class users(db.Model):
+class User(db.Model):
     __tablename__="user"
     id= db.Column(db.Integer, primary_key=True)
     name= db.Column(db.String(50))
@@ -41,6 +43,17 @@ class BlogPost(db.Model):
 #routes
 @app.route("/user", methods=["POST"])
 def create_user():
+    data = request.get_json()
+    # {"name":"bill"}
+    new_user=User(
+        name=data["name"],
+        email=data["email"],
+        address=data["address"],
+        phone=data["phone"]
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"message":"User Created"}), 200
     pass
 
 @app.route("/user/descending_id", methods=["GET"])
