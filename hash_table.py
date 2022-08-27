@@ -14,7 +14,6 @@ class HashTable:
     def custom_hash(self, key):
         hash_value=0
         for i in key:
-            print(i)
             hash_value += ord(i)
             hash_value = (hash_value * ord(i)) % self.table_size
         return hash_value
@@ -65,12 +64,3 @@ class HashTable:
             else:
                 print(f"     [{i}] {val}")
         print("}")
-
-# ht = HashTable(4)
-# ht.add_key_value("hi","there")
-# ht.add_key_value("hi","there")
-# ht.add_key_value("hi","there")
-# ht.add_key_value("hi","there")
-# ht.add_key_value("hi","there")
-# ht.add_key_value("hi","there")
-# ht.print_table()
