@@ -139,7 +139,7 @@ def create_blog_post(user_id):
     return jsonify({"message":"new blog post created!"}), 200
 
 @app.route("/blog_post/<blog_post_id>", methods=["GET"])
-def get_all_blog_posts(blog_post_id):
+def get_one_blog_post(blog_post_id):
     blog_posts = BlogPost.query.all()
     random.shuffle(blog_posts)
     bst = binary_search_tree.BinarySearchTree()
@@ -157,10 +157,6 @@ def get_all_blog_posts(blog_post_id):
         return jsonify({"message":"post not found!"})
     return jsonify(post)
 
-
-@app.route("/blog_post/<blog_post_id>", methods=["GET"])
-def get_one_blog_post(blog_post_id):
-    pass
 
 @app.route("/blog_post/<blog_post_id>", methods=["DELETE"])
 def delete_blog_post(blog_post_id):
