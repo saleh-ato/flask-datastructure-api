@@ -9,6 +9,7 @@ import linked_list
 import hash_table
 import binary_search_tree
 import random
+import custom_q
 
 app=Flask(__name__)
 
@@ -157,6 +158,31 @@ def get_one_blog_post(blog_post_id):
         return jsonify({"message":"post not found!"})
     return jsonify(post)
 
+
+@app.route("/blog_post/numeric_body", methods=["GET"])
+def get_numeric_post_bodies():
+    blog_posts = BlogPost.query.all()
+    q = custom_q.Queue()
+    for post in blog_posts:
+        q.enqueue(post)
+    
+    return_list = []
+    
+    for _ in range(len(blog_posts)):
+        post = q.dequeue()
+        numeric_body = 0
+        for char in post.data.body:
+            numeric_body += ord(char)
+        
+        post.data.body = numeric_body
+
+        return_list.append({
+            "id":post.data.id,
+            "title":post.data.title,
+            "body":post.data.body,
+            "user_id":post.data.user_id
+        })
+    return jsonify(return_list)
 
 @app.route("/blog_post/<blog_post_id>", methods=["DELETE"])
 def delete_blog_post(blog_post_id):
